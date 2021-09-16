@@ -5,6 +5,7 @@ const compression = require("compression");
 
 const PORT = 3001;
 
+
 const app = express();
 
 app.use(logger("dev"));
@@ -15,10 +16,13 @@ app.use(express.json());
 
 app.use(express.static("public"));
 
-mongoose.connect("mongodb://localhost/budget", {
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/budget', {
   useNewUrlParser: true,
   useFindAndModify: false
 });
+
+mongoose.connection.on('connected', () =>{ 
+  console.log('Mongoose is Connected');});
 
 // routes
 app.use(require("./routes/api.js"));
